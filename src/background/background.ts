@@ -1,8 +1,14 @@
-// background.ts
 let timerActive = false
-
 let remainingTime = 25 * 60
 let initialTime = 25 * 60
+
+const blockedUrls = [
+  'https://www.facebook.com/*',
+  'https://www.twitter.com/*',
+  'https://www.instagram.com/*',
+  'https://www.tiktok.com/*',
+  'https://www.youtube.com/*',
+]
 
 chrome.runtime.onConnect.addListener((port) => {
   if (port.name === 'popup') {
@@ -27,18 +33,41 @@ const resetTimer = (stopTimer = false) => {
   remainingTime = initialTime
 }
 
+const blockRequest = (details: chrome.webRequest.WebRequestBodyDetails) => {
+  if (timerActive && blockedUrls.some((url) => details.url.startsWith(url))) {
+    console.log('Blocking:', details.url)
+    return { cancel: true }
+  } else {
+    return {}
+  }
+}
+
+const toggleTimer = () => {
+  console.log('toggleTimer called')
+  timerActive = !timerActive
+
+  if (timerActive) {
+    console.log('Blocking URLs...')
+    chrome.alarms.create('timer', { periodInMinutes: 1 / 60 })
+    // Block URLs
+    chrome.webRequest.onBeforeRequest.addListener(
+      blockRequest,
+      { urls: blockedUrls },
+      ['blocking']
+    )
+  } else {
+    console.log('Unblocking URLs...')
+    chrome.alarms.clear('timer')
+    // Unblock URLs
+    chrome.webRequest.onBeforeRequest.removeListener(blockRequest)
+  }
+}
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === 'getTimerState') {
     sendResponse({ timerActive, remainingTime })
   } else if (message.type === 'toggleTimer') {
-    console.log('toggleTimer called')
-    timerActive = !timerActive
-
-    if (timerActive) {
-      chrome.alarms.create('timer', { periodInMinutes: 1 / 60 })
-    } else {
-      chrome.alarms.clear('timer')
-    }
+    toggleTimer()
   } else if (message.type === 'optionsChanged') {
     chrome.storage.sync.get('timerDuration', (data) => {
       if (data.timerDuration) {
@@ -56,7 +85,11 @@ chrome.alarms.onAlarm.addListener((alarm) => {
       timerActive = false
       remainingTime = initialTime
       chrome.alarms.clear('timer')
+      // Unblock URLs when timer is over
+      chrome.webRequest.onBeforeRequest.removeListener(blockRequest)
     }
+  } else {
+    console.log('Unknown alarm:', alarm)
   }
 })
 

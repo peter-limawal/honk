@@ -60,7 +60,7 @@ const App: React.FC<{}> = () => {
   return (
     <div className="container">
       <h1 className="title">Honk!</h1>
-      <p className="subtitle">Pomodoro Study Timer</p>
+      <p className="subtitle">Mr. Goose is watching...</p>
       <div className="circular-progressbar-container">
         <CircularProgressbarWithChildren
           value={((initialTime - remainingTime) / initialTime) * 100}

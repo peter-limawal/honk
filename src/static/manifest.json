@@ -13,7 +13,18 @@
     "default_title": "Honk!",
     "default_icon": "assets/goose1.png"
   },
-  "permissions": ["storage", "activeTab", "alarms"],
+  "permissions": [
+    "storage",
+    "activeTab",
+    "alarms",
+    "webRequest",
+    "webRequestBlocking",
+    "https://www.facebook.com/*",
+    "https://www.twitter.com/*",
+    "https://www.instagram.com/*",
+    "https://www.tiktok.com/*",
+    "https://www.youtube.com/*"
+  ],
   "options_page": "options.html",
   "background": {
     "service_worker": "background.js",
@@ -23,6 +34,12 @@
     {
       "matches": ["<all_urls>"],
       "js": ["contentScript.js"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["blocked.html"],
+      "matches": ["<all_urls>"]
     }
   ]
 }

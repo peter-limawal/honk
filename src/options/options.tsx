@@ -23,7 +23,7 @@ const App: React.FC<{}> = () => {
   return (
     <div>
       <div>
-        <label htmlFor="timer-duration">Timer Duration (minutes):</label>
+        <label htmlFor="timer-duration">Timer Duration (minutes): </label>
         <input
           id="timer-duration"
           type="number"

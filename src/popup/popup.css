@@ -1,8 +1,4 @@
 body {
-  background-color: #1c1c1c;
-}
-/* popup.css */
-body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -71,4 +67,27 @@ body {
   width: 90%; /* Adjust the size of the circular progress bar */
   height: 90%; /* Adjust the size of the circular progress bar */
   margin: 0 auto;
+}
+.settings-btn {
+  background-color: #03a9f4;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+  outline: none;
+  transition: background-color 0.3s;
+}
+
+.settings-btn:hover {
+  background-color: #039be5;
+}
+
+.settings-btn:active {
+  background-color: #0288d1;
 }
