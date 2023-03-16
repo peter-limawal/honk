@@ -16,17 +16,19 @@ const App: React.FC<{}> = () => {
   useEffect(() => {
     const connectedPort = chrome.runtime.connect({ name: 'popup' })
 
-    const fetchTimerState = () => {
+    const updateTimerState = () => {
       connectedPort.postMessage({ type: 'getTimerState' })
     }
 
-    fetchTimerState() // Fetch the initial timer state
-
-    // Fetch the timer state every second
-    const timerUpdateInterval = setInterval(fetchTimerState, 1000)
+    updateTimerState()
+    const timerUpdateInterval = setInterval(updateTimerState, 500)
 
     connectedPort.onMessage.addListener((response) => {
       if (response.type === 'updateTimerState') {
+        setTimerActive(response.timerActive)
+        setRemainingTime(response.remainingTime)
+        setInitialTime(response.initialTime)
+      } else if (response.type === 'timerDurationChanged') {
         setTimerActive(response.timerActive)
         setRemainingTime(response.remainingTime)
         setInitialTime(response.initialTime)
@@ -34,8 +36,8 @@ const App: React.FC<{}> = () => {
     })
 
     return () => {
-      clearInterval(timerUpdateInterval)
       connectedPort.disconnect()
+      clearInterval(timerUpdateInterval)
     }
   }, [])
 
