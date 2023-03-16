@@ -9,35 +9,39 @@ import {
 import 'react-circular-progressbar/dist/styles.css'
 
 const App: React.FC<{}> = () => {
-  const initialTime = 25 * 60 // 25 minutes in seconds
+  const [initialTime, setInitialTime] = useState(25 * 60)
   const [timerActive, setTimerActive] = useState(false)
   const [remainingTime, setRemainingTime] = useState(initialTime)
 
   useEffect(() => {
     const connectedPort = chrome.runtime.connect({ name: 'popup' })
 
-    connectedPort.postMessage({ type: 'getTimerState' })
+    const fetchTimerState = () => {
+      connectedPort.postMessage({ type: 'getTimerState' })
+    }
+
+    fetchTimerState() // Fetch the initial timer state
+
+    // Fetch the timer state every second
+    const timerUpdateInterval = setInterval(fetchTimerState, 1000)
 
     connectedPort.onMessage.addListener((response) => {
       if (response.type === 'updateTimerState') {
         setTimerActive(response.timerActive)
         setRemainingTime(response.remainingTime)
+        setInitialTime(response.initialTime)
       }
     })
 
-    // Add this interval to request updates every second
-    const updateInterval = setInterval(() => {
-      connectedPort.postMessage({ type: 'getTimerState' })
-    }, 1000)
-
     return () => {
+      clearInterval(timerUpdateInterval)
       connectedPort.disconnect()
-      clearInterval(updateInterval)
     }
   }, [])
 
   const toggleTimer = () => {
     console.log('toggleTimer called')
+    setTimerActive(!timerActive)
     chrome.runtime.sendMessage({ type: 'toggleTimer' })
   }
 
@@ -48,6 +52,8 @@ const App: React.FC<{}> = () => {
       .toString()
       .padStart(2, '0')}`
   }
+
+  const progress = (remainingTime / initialTime) * 100 // Update this line to use initialTime
 
   return (
     <div className="container">
@@ -76,6 +82,12 @@ const App: React.FC<{}> = () => {
         onClick={toggleTimer}
       >
         {timerActive ? 'Stop Studying' : 'Start Studying'}
+      </button>
+      <button
+        className="settings-btn"
+        onClick={() => chrome.runtime.openOptionsPage()}
+      >
+        Settings
       </button>
     </div>
   )

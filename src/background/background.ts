@@ -11,6 +11,7 @@ chrome.runtime.onConnect.addListener((port) => {
           type: 'updateTimerState',
           timerActive,
           remainingTime,
+          initialTime,
         })
       }
     })
@@ -29,6 +30,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     } else {
       chrome.alarms.clear('timer')
     }
+  } else if (message.type === 'optionsChanged') {
+    // Add this case
+    chrome.storage.sync.get('timerDuration', (data) => {
+      if (data.timerDuration) {
+        initialTime = data.timerDuration * 60
+        remainingTime = initialTime
+      }
+    })
   }
 })
 
