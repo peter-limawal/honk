@@ -1,3 +1,74 @@
 body {
   background-color: #1c1c1c;
 }
+/* popup.css */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f5f5f5;
+  min-width: 300px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: #888;
+}
+
+.timer {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.timer-toggle {
+  background-color: #4caf50;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+  outline: none;
+  transition: background-color 0.3s;
+}
+
+.timer-toggle:hover {
+  background-color: #45a049;
+}
+
+.timer-toggle.active {
+  background-color: #f44336;
+}
+
+.timer-toggle.active:hover {
+  background-color: #e53935;
+}
+
+.circular-progressbar-container {
+  position: relative;
+  width: 90%; /* Adjust the size of the circular progress bar */
+  height: 90%; /* Adjust the size of the circular progress bar */
+  margin: 0 auto;
+}

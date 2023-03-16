@@ -13,10 +13,11 @@
     "default_title": "Honk!",
     "default_icon": "assets/goose1.png"
   },
-  "permissions": ["storage"],
+  "permissions": ["storage", "activeTab", "alarms"],
   "options_page": "options.html",
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "type": "module"
   },
   "content_scripts": [
     {
